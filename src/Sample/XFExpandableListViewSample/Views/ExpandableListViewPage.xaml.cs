@@ -8,6 +8,7 @@ namespace XFExpandableListViewSample.Views
 		public ExpandableListViewPage()
 		{
 			InitializeComponent();
+            MainView.Children.Add(new ExpandableListView());
 		}
 	}
 }
