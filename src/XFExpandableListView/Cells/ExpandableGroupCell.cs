@@ -64,58 +64,59 @@ namespace XFExpandableListView.Cells
 
             _holderAdded = true;
 
-            var holder = new Grid();
-            holder.Children.Add(view);
-            holder.GestureRecognizers.Add(
-                new TapGestureRecognizer
+            View.GestureRecognizers.Add(new TapGestureRecognizer
+            {
+                Command = new Command(async () =>
                 {
-                    Command = new Command(async () =>
+                    #region [Toggle Group]
+
+                    /* If is collapsing enabled, then collapse/expand the group */
+                    if (ExpandableController.IsCollapsingEnabled)
                     {
-                        #region [Toggle Group]
+                        await ExpandableController.ToggleGroup(GroupController);
+                    }
 
-                        /* If is collapsing enabled, then collapse/expand the group */
-                        if (ExpandableController.IsCollapsingEnabled)
-                        {
-                            await ExpandableController.ToggleGroup(GroupController);
-                        }
+                    #endregion
 
-                        #endregion
+                    #region [Execute Cell Command]
 
-                        #region [Execute Cell Command]
+                    /* Execute the cell command */
+                    if (CellCommand == null) return;
 
-                        /* Execute the cell command */
-                        if (CellCommand == null) return;
-
-                        /* Pass the Cell Command Parameter if it is not null, otherwise pass the group */
-                        var cellParameter = CellCommandParameter ?? GroupController;
-                        if (!CellCommand.CanExecute(cellParameter)) return;
+                    /* Pass the Cell Command Parameter if it is not null, otherwise pass the group */
+                    var cellParameter = CellCommandParameter ?? GroupController;
+                    if (CellCommand != null && CellCommand.CanExecute(cellParameter))
+                    {
                         CellCommand.Execute(cellParameter);
+                    }
 
-                        #endregion
 
-                        #region [Execute ListView Command]
+                    #endregion
 
-                        /* Execute the group header command */
-                        if (ExpandableController.GroupHeaderCommand == null) return;
+                    #region [Execute ListView Command]
 
-                        /* Pass the GroupHeader Command Parameter if it is not null, otherwise pass the group */
-                        var parameter = ExpandableController.GroupHeaderCommandParameter ?? GroupController;
-                        if (!ExpandableController.GroupHeaderCommand.CanExecute(parameter)) return;
+                    /* Execute the group header command */
+                    if (ExpandableController.GroupHeaderCommand == null) return;
+
+
+                    /* Pass the GroupHeader Command Parameter if it is not null, otherwise pass the group */
+                    var parameter = ExpandableController.GroupHeaderCommandParameter ?? GroupController;
+                    if (ExpandableController.GroupHeaderCommand != null && ExpandableController.GroupHeaderCommand.CanExecute(cellParameter))
+                    {
                         ExpandableController.GroupHeaderCommand.Execute(parameter);
+                    }
 
-                        #endregion
 
-                        #region [Invoke Event]
+                    #endregion
 
-                        /* Invoke the Group Clicked Event */
-                        ExpandableController.OnGroupClicked(GroupController);
+                    #region [Invoke Event]
 
-                        #endregion
-                    })
-                }
-            );
+                    /* Invoke the Group Clicked Event */
+                    ExpandableController.OnGroupClicked(GroupController);
 
-            View = holder;
+                    #endregion
+                })
+            });
         }
     }
 }
