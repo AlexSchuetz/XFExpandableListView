@@ -5,6 +5,7 @@
              xmlns:cells="clr-namespace:XFExpandableListView.Cells;assembly=XFExpandableListView"
              xmlns:controls="clr-namespace:XFExpandableListView.Controls;assembly=XFExpandableListView"
              xmlns:viewModels="clr-namespace:XFExpandableListViewSample.ViewModels;assembly=XFExpandableListViewSample"
+             x:Name="Container"
              x:Class="XFExpandableListViewSample.Views.ExpandableListView">
     <ContentView.Content>
         <StackLayout>
@@ -57,28 +58,25 @@
                 </controls:ExpandableListView.ItemTemplate>
                 <controls:ExpandableListView.GroupHeaderTemplate>
                     <DataTemplate>
-                        <cells:ExpandableGroupCell CellCommand="{Binding ToggleCommand}" CellCommandParameter="{x:Reference IconLabel}">
-                            <StackLayout
-                            Padding="16"
-                            Orientation="Horizontal"
-                            Spacing="8">
-                                <Label
-                                x:Name="IconLabel"
-                                FontSize="36"
-                                Text="&#xe316;"
-                                TextColor="DarkGray"
-                                VerticalTextAlignment="Center">
+                        <cells:ExpandableGroupCell CellCommand="{Binding Source={x:Reference Name=Container}, Path=BindingContext.ToggleCommand}" CellCommandParameter="{x:Reference IconLabel}">
+                            <StackLayout Padding="16"
+                                         Orientation="Horizontal"
+                                         Spacing="8">
+                                <Label x:Name="IconLabel"
+                                       FontSize="36"
+                                       Text="&#xe316;"
+                                       TextColor="DarkGray"
+                                       VerticalTextAlignment="Center">
                                     <Label.FontFamily>
                                         <OnPlatform x:TypeArguments="x:String">
                                             <On Platform="Android" Value="MaterialIcons-Regular.ttf#MaterialIcons-Regular" />
                                         </OnPlatform>
                                     </Label.FontFamily>
                                 </Label>
-                                <Label
-                                FontSize="24"
-                                Text="{Binding Title}"
-                                TextColor="Gray"
-                                VerticalTextAlignment="Center" />
+                                <Label FontSize="24"
+                                       Text="{Binding Title}"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="Center" />
                             </StackLayout>
                         </cells:ExpandableGroupCell>
                     </DataTemplate>
